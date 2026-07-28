@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexão Íntima 🔥</title>
+    <script src="/static/socket.io.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0d0105; color: #fff; text-align: center; padding: 20px; margin: 0;
+        }
+        .container { max-width: 400px; margin: auto; }
+        input, button, select {
+            width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; box-sizing: border-box;
+        }
+        input, select { background: #20040d; color: white; border: 1px solid #ff2a6d; }
+        button { background: #ff2a6d; color: white; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #333; color: #777; border: 1px solid #444; cursor: not-allowed; }
+        
+        .card-box {
+            background: linear-gradient(135deg, #1d020a 0%, #3d0517 100%);
+            border: 2px solid #ff2a6d; border-radius: 12px; padding: 25px; margin: 20px 0; min-height: 150px;
+            display: flex; flex-direction: column; justify-content: center; box-shadow: 0 0 15px rgba(255, 42, 109, 0.25);
+        }
+        .card-type { font-weight: bold; color: #ff2a6d; letter-spacing: 3px; margin-bottom: 15px; font-size: 20px; }
+        
+        .card-text { font-size: 18px; line-height: 1.5; color: #ffe6ee; white-space: pre-line; word-wrap: break-word;}
+        .card-text.long { font-size: 15px; }
+
+        .action-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .btn-f1 { background: linear-gradient(90deg, #00c6ff, #0072ff); } 
+        .btn-f2 { background: linear-gradient(90deg, #fe8c00, #f83600); } 
+        .btn-f3 { background: linear-gradient(90deg, #f857a6, #ff5858); }
+        .btn-dice { background: linear-gradient(90deg, #8a2387, #e94057); margin-top: 5px; }
+        .turn-indicator { font-size: 18px; margin: 15px 0; color: #ffb7b2; font-weight: 500; }
+        .gender-selector { display: flex; gap: 10px; margin: 10px 0; }
+        .gender-btn { background: #222; flex: 1; border: 1px solid #555; }
+        .gender-btn.active { background: #ff2a6d; border-color: #ff2a6d; }
+        .status-box { background: #1c0510; border: 1px dashed #ff2a6d; border-radius: 8px; padding: 15px; text-align: left; margin: 15px 0; font-size: 14px;}
+        .status-item { margin: 5px 0; font-weight: bold; }
+        
+        #timer-container { display: none; margin: 15px 0; background: #1a0209; border-radius: 8px; padding: 10px; border: 1px solid #ff2a6d;}
+        #timer-display { font-size: 32px; font-weight: bold; color: #ff2a6d; font-family: monospace; }
+        .timer-btn { background: #27ae60; margin-top: 5px; font-size: 14px; padding: 8px; }
+        
+        #deck-editor {
+            background: #150208; border-top: 2px solid #ff2a6d; padding: 20px;
+            margin-top: 30px; text-align: left; border-radius: 12px; display: none;
+        }
+        .deck-title { font-weight: bold; color: #ffb7b2; border-bottom: 1px solid #3d0b1d; padding-bottom: 5px; margin-top: 15px; text-transform: uppercase; font-size: 13px;}
+        .card-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #23040f; padding: 8px 12px; margin: 5px 0; border-radius: 6px; font-size: 13px;
+        }
+        .del-btn { background: #c0392b; width: auto; padding: 4px 10px; margin: 0; font-size: 12px; border-radius: 4px;}
+        .add-box { display: flex; gap: 5px; }
+        .add-box input { margin: 0; padding: 10px; }
+        .add-box button { margin: 0; width: 60px; padding: 10px; background: #27ae60; }
+        
+        #roulette-overlay {
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background: rgba(13,1,5,0.95); display:flex; flex-direction:column;
+            justify-content:center; align-items:center; z-index:9999; display:none;
+        }
+        .spinner {
+            width: 80px; height: 80px; border: 8px solid #222; border-top: 8px solid #ff2a6d; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="roulette-overlay">
+        <div class="spinner"></div>
+        <h2 style="color:#ff2a6d;">GIRANDO A GARRAFA...</h2>
+        <p style="color:#aaa;">Sorteando quem comandará a primeira rodada!</p>
+    </div>
+
+    <div class="container">
+        <h1 style="color: #ff2a6d; text-shadow: 0 0 10px rgba(255,42,109,0.4);">🔥 Conexão Íntima</h1>
+        
+        <div id="login-screen">
+            <p>Quem está jogando?</p>
+            <input type="text" id="username" placeholder="Seu nome...">
+            <div class="gender-selector">
+                <button type="button" class="gender-btn" id="btn-H" onclick="setGender('H')">Homem</button>
+                <button type="button" class="gender-btn" id="btn-M" onclick="setGender('M')">Mulher</button>
+            </div>
+            <button onclick="joinGame()" style="margin-top: 20px; background: linear-gradient(90deg, #ff2a6d, #9b00e8)">Entrar na Sala</button>
+        </div>
+
+        <div id="lobby-screen" style="display: none;">
+            <p style="color: #ffb7b2;">Aguardando os dois confirmarem prontidão:</p>
+            <div class="status-box" id="lobby-status-container"></div>
+            <button id="ready-btn" onclick="setReady()" style="background: linear-gradient(90deg, #27ae60, #2ecc71)">Marcar como PRONTO ✓</button>
+        </div>
+
+        <div id="game-screen" style="display: none;">
+            <div class="turn-indicator" id="turn-text">Carregando...</div>
+            
+            <div class="card-box" id="card-display">
+                <div class="card-type" id="card-title">A GARRAFA APONTOU</div>
+                <div class="card-text" id="card-text">O jogo começará agora.</div>
+            </div>
+
+            <div id="timer-container">
+                <div style="font-size:11px; text-transform:uppercase; color:#aaa; letter-spacing:1px; margin-bottom:3px;">⏱️ Tempo Restante</div>
+                <div id="timer-display">00:00</div>
+                <button id="trigger-timer-btn" class="timer-btn" onclick="startCountdownFromServer()" style="display:none;">Iniciar Contagem Regressiva ▶</button>
+            </div>
+
+            <div id="controls" style="display: none;">
+                <p id="action-instruction" style="color: #ccc; font-size: 15px;"></p>
+                <div class="action-grid">
+                    <button class="btn-f1" onclick="draw('fase1')">🧊 Sorteia: Aquecimento</button>
+                    <button class="btn-f2" onclick="draw('fase2')">🔥 Sorteia: Preliminar</button>
+                    <button class="btn-f3" onclick="draw('fase3')">👅 Sorteia: O Ato</button>
+                    <button class="btn-dice" onclick="rollDice()">🎲 GIRAR DADOS ERÓTICOS</button>
+                </div>
+                <button id="next-btn" style="margin-top: 25px; background: #111; border: 1px solid #ff2a6d; display: none;" onclick="nextTurn()">Ação Realizada ✓ Próxima Rodada</button>
+            </div>
+
+            <button onclick="toggleDeckEditor()" style="background: #111; border: 1px dashed #555; margin-top: 30px; font-size: 13px; color: #aaa;">⚙️ Customizar Cartas e Dados Eróticos</button>
+
+            <div id="deck-editor">
+                <h3 style="margin-top:0; color:#ff2a6d; font-size: 16px;" id="editor-header">Cartas Secretas</h3>
+                <div class="add-box">
+                    <select id="new-card-fase" style="width:130px; margin:0; padding:10px; font-size: 12px;">
+                        <option value="fase1">Aquecimento</option>
+                        <option value="fase2">Preliminar</option>
+                        <option value="fase3">O Ato</option>
+                    </select>
+                    <input type="text" id="new-card-text" placeholder="Criar novo desafio...">
+                    <button onclick="addCard()">+</button>
+                </div>
+
+                <div class="deck-title">Fase 1: Aquecimento</div><div id="list-fase1"></div>
+                <div class="deck-title">Fase 2: Preliminar</div><div id="list-fase2"></div>
+                <div class="deck-title">Fase 3: O Ato</div><div id="list-fase3"></div>
+
+                <h3 style="margin-top:30px; color:#ff2a6d; font-size: 16px; border-top:1px solid #444; padding-top:15px;">🎲 Customizar Dados Eróticos</h3>
+                <div class="add-box">
+                    <select id="new-dice-target" style="width:130px; margin:0; padding:10px; font-size: 12px;">
+                        <option value="acoes">Ação</option>
+                        <option value="corpo">Parte do Corpo</option>
+                    </select>
+                    <input type="text" id="new-dice-text" placeholder="Adicionar ao dado...">
+                    <button onclick="addDiceItem()">+</button>
+                </div>
+
+                <div class="deck-title" style="color: #fe8c00;">Ações do Dado</div><div id="list-dice-acoes"></div>
+                <div class="deck-title" style="color: #fe8c00;">Partes do Corpo do Dado</div><div id="list-dice-corpo"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let myName = "";
+        let selectedGender = "";
+        let editorOpen = false;
+        let countdownInterval = null;
+        let currentCardDuration = 0;
+        let isAnimating = false;
+        let pendingState = null;
+
+        function setGender(gender) {
+            selectedGender = gender;
+            document.getElementById('btn-H').classList.remove('active');
+            document.getElementById('btn-M').classList.remove('active');
+            document.getElementById(`btn-${gender}`).classList.add('active');
+        }
+
+        function joinGame() {
+            myName = document.getElementById('username').value.trim();
+            if (!myName || !selectedGender) { alert("Escolha o nome e o gênero!"); return; }
+            socket.emit('join_game', { name: myName, gender: selectedGender });
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('lobby-screen').style.display = 'block';
+        }
+
+        function setReady() { socket.emit('player_ready'); }
+        function draw(fase) { socket.emit('draw_card', { fase: fase }); }
+        function rollDice() { socket.emit('roll_dice'); }
+        function nextTurn() { socket.emit('next_turn'); }
+
+        function startCountdownFromServer() {
+            if (currentCardDuration > 0) {
+                socket.emit('start_synced_timer', { duration: currentCardDuration });
+            }
+        }
+
+        function toggleDeckEditor() {
+            editorOpen = !editorOpen;
+            document.getElementById('deck-editor').style.display = editorOpen ? 'block' : 'none';
+            if(editorOpen) socket.emit('request_deck');
+        }
+
+        function addCard() {
+            const fase = document.getElementById('new-card-fase').value;
+            const text = document.getElementById('new-card-text').value;
+            if(!text) return;
+            socket.emit('add_card', { fase: fase, text: text });
+            document.getElementById('new-card-text').value = "";
+        }
+
+        function deleteCard(fase, index) {
+            if(confirm("Remover desafio?")) socket.emit('delete_card', { fase: fase, index: index });
+        }
+
+        function addDiceItem() {
+            const target = document.getElementById('new-dice-target').value;
+            const text = document.getElementById('new-dice-text').value;
+            if(!text) return;
+            socket.emit('add_dice_item', { target: target, text: text });
+            document.getElementById('new-dice-text').value = "";
+        }
+
+        function deleteDiceItem(target, index) {
+            if(confirm("Remover este item do dado?")) socket.emit('delete_dice_item', { target: target, index: index });
+        }
+
+        socket.on('start_roulette_animation', function(data) {
+            isAnimating = true;
+            pendingState = null; 
+            document.getElementById('lobby-screen').style.display = 'none';
+            
+            const overlay = document.getElementById('roulette-overlay');
+            overlay.style.display = 'flex';
+            
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('card-title').innerText = "🔥 GARRAFA GIROU!";
+            document.getElementById('card-text').innerText = `A garrafa apontou para ${data.winner_name}.\n\nPreparando o tabuleiro...`;
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                isAnimating = false;
+                
+                if (pendingState) {
+                    renderGameState(pendingState);
+                    pendingState = null;
+                } else {
+                    document.getElementById('card-text').innerText = `A garrafa apontou para ${data.winner_name}.\n\nEle(a) comandará este turno!`;
+                }
+            }, 3000); 
+        });
+
+        socket.on('game_update', function(state) {
+            if (isAnimating) {
+                pendingState = state;
+                return;
+            }
+            renderGameState(state);
+        });
+
+        socket.on('trigger_visual_timer', function(data) {
+            clearInterval(countdownInterval);
+            document.getElementById('trigger-timer-btn').style.display = 'none';
+            let timeLeft = data.duration;
+            
+            countdownInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('timer-display').innerText = "FIM DO TEMPO! 🔥";
+                    return;
+                }
+                timeLeft--;
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timer-display').innerText = 
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        });
+
+        socket.on('load_deck', function(data) {
+            document.getElementById('editor-header').innerText = `✏️ Desafios que você envia para o par`;
+            ['fase1', 'fase2', 'fase3'].forEach(f => {
+                const container = document.getElementById(`list-${f}`);
+                container.innerHTML = "";
+                data.deck[f].forEach((text, index) => {
+                    container.innerHTML += `<div class="card-item"><span>${text}</span><button class="del-btn" onclick="deleteCard('${f}', ${index})">X</button></div>`;
+                });
+            });
+            ['acoes', 'corpo'].forEach(t => {
+                const container = document.getElementById(`list-dice-${t}`);
+                container.innerHTML = "";
+                data.dice[t].forEach((text, index) => {
+                    container.innerHTML += `<div class="card-item"><span>${text}</span><button class="del-btn" onclick="deleteDiceItem('${t}', ${index})">X</button></div>`;
+                });
+            });
+        });
+
+        function renderGameState(state) {
+            const lobbyStatus = document.getElementById('lobby-status-container');
+            if (lobbyStatus) {
+                lobbyStatus.innerHTML = "";
+                state.players_status.forEach(statusText => {
+                    lobbyStatus.innerHTML += `<div class='status-item'>${statusText}</div>`;
+                });
+            }
+
+            const readyBtn = document.getElementById('ready-btn');
+            if (state.am_i_ready) {
+                readyBtn.disabled = true;
+                readyBtn.innerText = "Aguardando seu par... ✓";
+            } else {
+                readyBtn.disabled = false;
+                readyBtn.innerText = "Marcar como PRONTO ✓";
+            }
+
+            if (state.game_started) {
+                document.getElementById('lobby-screen').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'block';
+
+                if (state.is_my_turn) {
+                    document.getElementById('turn-text').innerText = `👉 SUA VEZ DE MANDAR!`;
+                    document.getElementById('action-instruction').innerText = `Escolha uma fase ou ative os dados para desafiar seu par:`;
+                    document.getElementById('controls').style.display = 'block';
+                } else {
+                    document.getElementById('turn-text').innerText = `⏳ Vez do seu par...`;
+                    document.getElementById('controls').style.display = 'none';
+                }
+
+                if (state.card && state.card.text) {
+                    document.getElementById('card-title').innerText = state.card.type;
+                    
+                    const cardTextElement = document.getElementById('card-text');
+                    cardTextElement.innerText = state.card.text;
+                    
+                    if (state.card.text.length > 120) {
+                        cardTextElement.classList.add('long');
+                    } else {
+                        cardTextElement.classList.remove('long');
+                    }
+
+                    if (state.card.duration && state.card.duration > 0) {
+                        currentCardDuration = state.card.duration;
+                        document.getElementById('timer-container').style.display = 'block';
+                        
+                        let startMins = Math.floor(currentCardDuration / 60);
+                        let startSecs = currentCardDuration % 60;
+                        document.getElementById('timer-display').innerText = 
+                            `${startMins.toString().padStart(2, '0')}:${startSecs.toString().padStart(2, '0')}`;
+                        
+                        document.getElementById('trigger-timer-btn').style.display = state.is_my_turn ? 'inline-block' : 'none';
+                    } else {
+                        clearInterval(countdownInterval);
+                        document.getElementById('timer-container').style.display = 'none';
+                        currentCardDuration = 0;
+                    }
+
+                    if (state.is_my_turn) {
+                        document.getElementById('next-btn').style.display = 'block';
+                    } else {
+                        document.getElementById('next-btn').style.display = 'none';
+                    }
+                } else {
+                    if (document.getElementById('card-title').innerText !== "🔥 GARRAFA GIROU!") {
+                        document.getElementById('card-title').innerText = "PRÓXIMA RODADA";
+                        document.getElementById('card-text').innerText = state.is_my_turn ? 
+                            "Escolha um botão abaixo para ditar a próxima ação." : 
+                            `Seu par está preparando seu destino...`;
+                        clearInterval(countdownInterval);
+                        document.getElementById('timer-container').style.display = 'none';
+                    }
+                    document.getElementById('next-btn').style.display = 'none';
+                }
+                if(editorOpen) socket.emit('request_deck');
+            } else {
+                if (document.getElementById('login-screen').style.display === 'none' && !state.am_i_ready) {
+                    document.getElementById('game-screen').style.display = 'none';
+                    document.getElementById('lobby-screen').style.display = 'block';
+                }
+            }
+        }
+
+        socket.on('error', function(data) { alert(data.msg); });
+    </script>
+</body>
+</html>
