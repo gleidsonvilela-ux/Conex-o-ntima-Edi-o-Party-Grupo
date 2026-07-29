@@ -17,7 +17,7 @@
         }
         input, select { background: #1a022e; color: white; border: 1px solid #8a2387; }
         button { background: linear-gradient(90deg, #8a2387, #e94057, #f27121); color: white; font-weight: bold; cursor: pointer; touch-action: manipulation; }
-        button:disabled { background: #222 !important; color: #555 !important; border: 1px solid #333 !important; cursor: not-allowed; }
+        button:disabled { background: #222 !important; color: #555 !important; border: 1px solid #333 !important; cursor: not-allowed; opacity: 0.5; }
         
         .instruction-box { background: #150224; border: 1px solid #8a2387; border-radius: 12px; padding: 20px; text-align: left; margin: 20px 0; }
         .instruction-box h3 { color: #e94057; margin-top: 0; font-size: 16px; text-transform: uppercase; border-bottom: 1px solid #3d0537; padding-bottom: 8px;}
@@ -78,7 +78,7 @@
             <button onclick="confirmExistingRoom()" style="background: #111; border: 1px solid #8a2387; color: #8a2387;">➡️ ENTRAR NA SALA DA GALERA</button>
         </div>
 
-        <!-- TELA 1: CADASTRO COMPLETO DO JOGADOR -->
+        <!-- TELA 1: CADASTRO DO JOGADOR (SEM BOTAO DE PRESENCIAL/DISTÂNCIA) -->
         <div id="login-screen" style="display: none;">
             <label style="font-size:11px; color:#aaa; display:block; text-align:left; margin-bottom:2px;">Seu Gênero:</label>
             <div class="gender-selector">
@@ -94,14 +94,6 @@
 
             <input type="text" id="username" placeholder="Seu Nome / Apelido">
 
-            <div id="location-setup-wrapper" style="margin-top:10px;">
-                <label style="font-size:11px; color:#aaa; display:block; text-align:left; margin-bottom:2px;">Modo do Encontro:</label>
-                <select id="location-mode">
-                    <option value="presencial">🏠 Presencial (Festa / Resenha / Bar)</option>
-                    <option value="distancia">🌐 À Distância (Grupo de WhatsApp)</option>
-                </select>
-            </div>
-
             <button onclick="showInstructions()" style="margin-top: 20px;">Avançar ➡️</button>
         </div>
 
@@ -110,9 +102,9 @@
             <div class="instruction-box">
                 <h3>🍹 REGRAS DA RESENHA DE GRUPO</h3>
                 <ul>
-                    <li>Deixem as <strong>bebidas 🍻 / shots 🥃</strong> preparados na mesa.</li>
+                    <li>Deixem as <strong>bebidas 🍻 / shots 🥃</strong> preparados.</li>
                     <li>O algoritmo respeita a <strong>preferência de gênero</strong> marcada no cadastro de cada um!</li>
-                    <li>Cartas <strong>Coletivas</strong> envolvem o voto e a participação de todo o grupo.</li>
+                    <li><strong>Avanço de Fase:</strong> Para liberar a próxima fase, todo mundo do grupo precisa cumprir pelo menos 1 rodada da fase atual!</li>
                     <li>Se pular uma rodada, o participante paga o <strong>Castigo do Grupo 🛑</strong>!</li>
                 </ul>
             </div>
@@ -138,7 +130,7 @@
                     <div class="phase-block">
                         <div class="phase-title">
                             <span>🧊 FASE 1: AQUECIMENTO & SOCIAL</span>
-                            <span id="label-f1-count">Progresso: 0</span>
+                            <span id="label-f1-count">Seu progresso: 0</span>
                         </div>
                         <div class="vod-grid">
                             <button class="btn-v" onclick="draw('fase1', 'verdade')">🤔 Verdade</button>
@@ -149,22 +141,22 @@
                     <div class="phase-block">
                         <div class="phase-title">
                             <span>🔥 FASE 2: TENSÃO & FESTA</span>
-                            <span id="label-f2-count">Liberado</span>
+                            <span id="label-f2-status">Bloqueado</span>
                         </div>
                         <div class="vod-grid">
-                            <button class="btn-v" onclick="draw('fase2', 'verdade')">🤔 Verdade</button>
-                            <button class="btn-d" onclick="draw('fase2', 'desafio')">😈 Desafio</button>
+                            <button class="btn-v" id="btn-f2-v" onclick="draw('fase2', 'verdade')" disabled>🤔 Verdade</button>
+                            <button class="btn-d" id="btn-f2-d" onclick="draw('fase2', 'desafio')" disabled>😈 Desafio</button>
                         </div>
                     </div>
 
                     <div class="phase-block">
                         <div class="phase-title">
                             <span>👅 FASE 3: SEM LIMITES</span>
-                            <span id="label-f3-count">Liberado</span>
+                            <span id="label-f3-status">Bloqueado</span>
                         </div>
                         <div class="vod-grid">
-                            <button class="btn-v" onclick="draw('fase3', 'verdade')">🤔 Verdade</button>
-                            <button class="btn-d" onclick="draw('fase3', 'desafio')">😈 Desafio</button>
+                            <button class="btn-v" id="btn-f3-v" onclick="draw('fase3', 'verdade')" disabled>🤔 Verdade</button>
+                            <button class="btn-d" id="btn-f3-d" onclick="draw('fase3', 'desafio')" disabled>😈 Desafio</button>
                         </div>
                     </div>
                 </div>
@@ -259,7 +251,6 @@
             if(data.valid) {
                 document.getElementById('room-panel').style.display = 'none';
                 document.getElementById('login-screen').style.display = 'block';
-                document.getElementById('location-setup-wrapper').style.display = 'none';
                 showStickyBadge(`SALA CONECTADA: ${activeRoomId} ✓`);
             } else { alert("Sala de grupo não encontrada!"); }
         });
@@ -289,9 +280,8 @@
         }
 
         function joinGame() {
-            const loc = document.getElementById('location-mode').value;
             document.getElementById('instruction-screen').style.display = 'none';
-            socket.emit('join_game', { room_id: activeRoomId, name: myName, gender: selectedGender, pref: selectedPref, location_mode: loc });
+            socket.emit('join_game', { room_id: activeRoomId, name: myName, gender: selectedGender, pref: selectedPref });
         }
 
         function setReady() { socket.emit('player_ready', { room_id: activeRoomId }); }
@@ -324,6 +314,31 @@
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('lobby-screen').style.display = 'none';
                 document.getElementById('game-screen').style.display = 'block';
+
+                // LÓGICA VISUAL DE BLOQUEIO DE FASES
+                document.getElementById('label-f1-count').innerText = `Sua pontuação/jogadas: ${state.my_f1_count || 0}`;
+                
+                // Liberação da Fase 2
+                if(state.fase2_unlocked) {
+                    document.getElementById('label-f2-status').innerText = "Liberado ✓";
+                    document.getElementById('btn-f2-v').disabled = false;
+                    document.getElementById('btn-f2-d').disabled = false;
+                } else {
+                    document.getElementById('label-f2-status').innerText = "Bloqueado (Aguardando todos cumprirem F1)";
+                    document.getElementById('btn-f2-v').disabled = true;
+                    document.getElementById('btn-f2-d').disabled = true;
+                }
+
+                // Liberação da Fase 3
+                if(state.fase3_unlocked) {
+                    document.getElementById('label-f3-status').innerText = "Liberado ✓";
+                    document.getElementById('btn-f3-v').disabled = false;
+                    document.getElementById('btn-f3-d').disabled = false;
+                } else {
+                    document.getElementById('label-f3-status').innerText = "Bloqueado (Aguardando todos cumprirem F2)";
+                    document.getElementById('btn-f3-v').disabled = true;
+                    document.getElementById('btn-f3-d').disabled = true;
+                }
 
                 if (state.card && state.card.text) {
                     document.getElementById('category-selection-screen').style.display = 'none';
