@@ -49,6 +49,10 @@
         
         .room-sticky-badge { background: #1a022e; padding: 10px; border-radius: 8px; font-weight: bold; color: #e94057; border: 1px solid #8a2387; font-size: 14px; margin-bottom: 15px; display: none; }
         
+        #timer-container { display: none; margin: 15px 0; background: #1a022e; border-radius: 8px; padding: 10px; border: 1px solid #e94057;}
+        #timer-display { font-size: 32px; font-weight: bold; color: #e94057; font-family: monospace; }
+        .timer-btn { background: #27ae60; margin-top: 5px; font-size: 14px; padding: 8px; }
+
         #roulette-overlay {
             position: fixed; top:0; left:0; width:100vw; height:100vh;
             background: rgba(13,1,24,0.95); display:flex; flex-direction:column;
@@ -78,7 +82,7 @@
             <button onclick="confirmExistingRoom()" style="background: #111; border: 1px solid #8a2387; color: #8a2387;">➡️ ENTRAR NA SALA DA GALERA</button>
         </div>
 
-        <!-- TELA 1: CADASTRO DO JOGADOR (SEM BOTAO DE PRESENCIAL/DISTÂNCIA) -->
+        <!-- TELA 1: CADASTRO DO JOGADOR -->
         <div id="login-screen" style="display: none;">
             <label style="font-size:11px; color:#aaa; display:block; text-align:left; margin-bottom:2px;">Seu Gênero:</label>
             <div class="gender-selector">
@@ -130,7 +134,7 @@
                     <div class="phase-block">
                         <div class="phase-title">
                             <span>🧊 FASE 1: AQUECIMENTO & SOCIAL</span>
-                            <span id="label-f1-count">Seu progresso: 0</span>
+                            <span id="label-f1-count">Sua pontuação/jogadas: 0</span>
                         </div>
                         <div class="vod-grid">
                             <button class="btn-v" onclick="draw('fase1', 'verdade')">🤔 Verdade</button>
@@ -169,6 +173,12 @@
                 <div class="card-box">
                     <div class="card-type" id="card-title">DESAFIO DE GRUPO</div>
                     <div class="card-text" id="card-text">Carregando...</div>
+                </div>
+
+                <!-- CRONÔMETRO SINCRONIZADO -->
+                <div id="timer-container">
+                    <div id="timer-display">00:00</div>
+                    <button id="trigger-timer-btn" class="timer-btn" onclick="startCountdownFromServer()">Iniciar Cronômetro ▶</button>
                 </div>
 
                 <div id="finish-turn-controls" style="margin-top: 20px;">
@@ -226,11 +236,18 @@
                     osc.connect(gain); gain.connect(audioCtx.destination);
                     osc.start(now + (idx * 0.08)); osc.stop(now + (idx * 0.08) + 0.4);
                 });
+
+            } else if (type === 'timerBeep') {
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, now);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.1);
             }
         }
 
         const socket = io({ transports: ['websocket', 'polling'] });
-        let myName = "", selectedGender = "H", selectedPref = "hetero", activeRoomId = "";
+        let myName = "", selectedGender = "H", selectedPref = "hetero", activeRoomId = "", currentCardDuration = 0;
 
         function requestNewRoom() { socket.emit('create_room'); }
         socket.on('room_created', (data) => {
@@ -298,11 +315,32 @@
             if(confirm("Encerrar a partida do grupo e ver o placar final?")) socket.emit('end_game', { room_id: activeRoomId });
         }
 
+        function startCountdownFromServer() {
+            if (currentCardDuration > 0) socket.emit('start_synced_timer', { room_id: activeRoomId, duration: currentCardDuration });
+        }
+
         socket.on('start_roulette_animation', (data) => {
             playSFX('roleta');
             document.getElementById('roulette-sub').innerText = `👉 ${data.winner_name.toUpperCase()} escolhe a carta para: ${data.target_name.toUpperCase()}`;
             document.getElementById('roulette-overlay').style.display = 'flex';
             setTimeout(() => { document.getElementById('roulette-overlay').style.display = 'none'; }, 2200);
+        });
+
+        socket.on('trigger_visual_timer', (data) => {
+            let timeLeft = data.duration;
+            document.getElementById('timer-container').style.display = 'block';
+            let countdownInterval = setInterval(() => {
+                if (timeLeft <= 0) { 
+                    clearInterval(countdownInterval); 
+                    document.getElementById('timer-display').innerText = "FIM DO TEMPO! 🔥"; 
+                    return; 
+                }
+                timeLeft--;
+                // TOCA O SOM NOS ÚLTIMOS 10 SEGUNDOS
+                if(timeLeft <= 10 && timeLeft > 0) playSFX('timerBeep');
+                let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+                document.getElementById('timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
         });
 
         socket.on('game_update', function(state) {
@@ -315,10 +353,8 @@
                 document.getElementById('lobby-screen').style.display = 'none';
                 document.getElementById('game-screen').style.display = 'block';
 
-                // LÓGICA VISUAL DE BLOQUEIO DE FASES
                 document.getElementById('label-f1-count').innerText = `Sua pontuação/jogadas: ${state.my_f1_count || 0}`;
                 
-                // Liberação da Fase 2
                 if(state.fase2_unlocked) {
                     document.getElementById('label-f2-status').innerText = "Liberado ✓";
                     document.getElementById('btn-f2-v').disabled = false;
@@ -329,7 +365,6 @@
                     document.getElementById('btn-f2-d').disabled = true;
                 }
 
-                // Liberação da Fase 3
                 if(state.fase3_unlocked) {
                     document.getElementById('label-f3-status').innerText = "Liberado ✓";
                     document.getElementById('btn-f3-v').disabled = false;
@@ -353,6 +388,16 @@
                         layout.innerHTML = `<button class="btn-success" onclick="window.location.reload()">🔄 Criar Nova Sala de Grupo</button>`;
                     } else {
                         layout.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><button class="btn-success" onclick="finishTurn(true)">Cumprido na Roda ✓</button><button class="btn-danger" onclick="triggerPunishment()">Pular Rodada (Castigo 🛑)</button></div>`;
+                    }
+
+                    // EXIBE CRONÔMETRO SE A CARTA TIVER TEMPO DEFINIDO
+                    if (state.card.duration > 0 && state.card.fase_key !== 'game_over') {
+                        currentCardDuration = state.card.duration;
+                        document.getElementById('timer-container').style.display = 'block';
+                        let m = Math.floor(currentCardDuration / 60), s = currentCardDuration % 60;
+                        document.getElementById('timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                    } else { 
+                        document.getElementById('timer-container').style.display = 'none'; 
                     }
 
                     document.getElementById('finish-turn-controls').style.display = (state.is_my_turn || state.card.fase_key === 'game_over') ? 'block' : 'none';
