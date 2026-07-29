@@ -21,7 +21,7 @@ socketio = SocketIO(
     ping_interval=25
 )
 
-# 👥 BARALHO MASSIVO, EXPLÍCITO E COM FETICHES - PARTY & GRUPO
+# 👥 BARALHO ULTRA EXPANDIDO - FASES 2 E 3 RECHEADAS DE DESAFIOS E FETICHES
 ORIGINAL_CARDS = {
     "fase1": {
         "verdade": {
@@ -95,47 +95,71 @@ ORIGINAL_CARDS = {
                 "{mandante}, olhe nos olhos de {alvo} e responda: se a gente apagasse as luzes agora, onde a sua mão iria primeiro no corpo dela?",
                 "{mandante}, qual o fetiche mais louco que você gostaria de realizar com {alvo} depois que o jogo acabar?",
                 "{mandante}, qual tipo de lingerie em {alvo} te deixaria completamente sem controle na cama: renda preta, fio-dental ou cetim?",
-                "{mandante}, você prefere dominar {alvo} pela voz e pela pegada ou deixar que ela tome o controle total da situação?"
+                "{mandante}, você prefere dominar {alvo} pela voz e pela pegada ou deixar que ela tome o controle total da situação?",
+                "{mandante}, confesse: qual a cena mais safada em que você imaginou {alvo} usando esse salto alto ou essa roupa hoje?",
+                "{mandante}, se {alvo} pedisse para você fechar os olhos e adivinhar onde ela está te tocando, você aceitaria?",
+                "{mandante}, qual o tipo de gemido ou suspiro de {alvo} no seu ouvido que te faria perder a cabeça no ato?"
             ],
             "M_H": [
                 "{mandante}, se {alvo} te tirasse para dançar no escuro e te pegasse pela cintura agora, você deixaria ele te beijar?",
                 "{mandante}, qual parte do corpo de {alvo} te deixa mais desconcentrada durante o jogo?",
                 "{mandante}, qual atitude masculina durante a provocação te faz ficar molhada instantaneamente?",
-                "{mandante}, se {alvo} sussurrasse no seu ouvido uma ordem direta na frente de todo mundo, você obedeceria?"
+                "{mandante}, se {alvo} sussurrasse no seu ouvido uma ordem direta na frente de todo mundo, você obedecerias?",
+                "{mandante}, confesse para a roda: o que você sente quando um homem segura o seu pescoço com firmeza e carinho?",
+                "{mandante}, se você pudesse mandar {alvo} tirar a camisa e ficar só de calça até o fim da festa, você mandaria?",
+                "{mandante}, qual é a provocação que {alvo} poderia fazer no seu corpo agora que te faria arrepiar inteira?"
             ],
             "M_M": [
                 "{mandante}, você aceitaria um desafio de provocação a sós no quarto com {alvo} enquanto o grupo espera na sala?",
-                "{mandante}, qual o nível de tesão que te dá ver outra mulher se exibindo de salto e lingerie em uma brincadeira de roda?"
+                "{mandante}, qual o nível de tesão que te dá ver outra mulher se exibindo de salto e lingerie em uma brincadeira de roda?",
+                "{mandante}, se você e {alvo} tivessem que inventar um fetiche duplo para provocar os homens da mesa, qual seria?",
+                "{mandante}, confesse: qual a parte do corpo de {alvo} que você mais sente vontade de passar as unhas ou a boca?"
             ],
             "H_H": [
-                "{mandante}, diga para a roda: qual amigo daqui é o mais ruim de papo na hora de xavecar alguém na festa?"
+                "{mandante}, diga para a roda: qual amigo daqui é o mais ruim de papo na hora de xavecar alguém na festa?",
+                "{mandante}, quem do grupo tem mais cara de que é dominado dentro de casa e finge que é o bravo na rua?"
             ],
             "COLETIVA": [
                 "🥂 EU NUNCA PICANTE: 'Eu nunca fiquei com mais de uma pessoa desta mesma roda de amigos!' Quem já fez, toma 2 doses!",
-                "EU NUNCA FETICHE: 'Eu nunca usei lingeries especiais, saltos ou brinquedos para uma noite de provocação!' Quem já fez, bebe!"
+                "EU NUNCA FETICHE: 'Eu nunca usei lingeries especiais, saltos, vendas ou algemas em um encontro!' Quem já fez, bebe!",
+                "VOTAÇÃO DA RODA: Quem aqui tem mais cara de que gosta de dar ordens na cama? O mais votado bebe 1 shot!",
+                "CONFISSÃO DE MÍDIA: Quem da roda já tirou uma foto ousada no espelho do banheiro hoje antes de vir para o jogo?"
             ]
         },
         "desafio": {
             "H_M": [
-                "{mandante} deve dar um beijo de 10 segundos na boca de {alvo} (ou no pescoço) sem tirar as mãos do quadril/bunda dela!",
-                "{mandante} deve deslizar as mãos por baixo da blusa/saia de {alvo} por 15 segundos sentindo a pele e a lingerie dela!",
+                "{mandante} deve dar um beijo de 10 segundos na boca de {alvo} sem tirar as mãos do quadril/bunda dela!",
+                "{mandante} deve deslizar as mãos por baixo da blusa/saia de {alvo} por 20 segundos sentindo a pele e a lingerie dela!",
                 "COMANDO DA RODADA: {mandante} ganha o direito de inventar UM DESAFIO PICANTE para {alvo} cumprir na hora!",
-                "{mandante} deve segurar {alvo} pela nuca com firmeza, aproximar os rostos a 1cm e dizer exatamente o que quer fazer com ela."
+                "{mandante} deve segurar {alvo} pela nuca com firmeza, aproximar os rostos a 1cm e dizer no ouvido dela exatamente o que quer fazer na cama.",
+                "{mandante} deve tirar uma peça de roupa/acessório de {alvo} usando apenas a boca!",
+                "{mandante} deve vendar os olhos de {alvo} com um pano/manga de blusa e passar os dentes e lábios pelo pescoço dela por 30 segundos.",
+                "{mandante} deve posicionar a mão de {alvo} no seu próprio peitoral/barriga e mandar ela sentir seus batimentos acelerados.",
+                "{mandante} deve puxar {alvo} para o seu colo, segurar a cintura dela e dar 3 mordidinhas provocantes no pescoço/saboneteira!"
             ],
             "M_H": [
                 "{mandante} deve abotoar/desabotoar a camisa de {alvo} usando apenas os dentes na frente do grupo!",
                 "{mandante} deve dar uma rebolada provocante no colo de {alvo} de salto alto por 20 segundos enquanto a roda faz pressão!",
-                "COMANDO DA RODADA: {mandante} ganha o direito de ditar UMA ORDEM PICANTE para {alvo} executar imediatamente!"
+                "COMANDO DA RODADA: {mandante} ganha o direito de ditar UMA ORDEM PICANTE para {alvo} executar imediatamente!",
+                "{mandante} deve vendar os olhos de {alvo} e fazer ele adivinhar qual parte do seu corpo de lingerie/pele está encostando no rosto dele!",
+                "{mandante} deve sentar de frente para {alvo}, travar as pernas nele e dar um beijo lento e profundo de 10 segundos!",
+                "{mandante} deve passar uma pedra de gelo ou drink no peitoral de {alvo} e tomar com a boca diretamente na pele dele!",
+                "{mandante} deve dar um tapa estalado na bunda de {alvo} e mandar ele servir a sua próxima bebida de joelhos!"
             ],
             "M_M": [
                 "{mandante} e {alvo} devem dar um beijo de 10 segundos na boca e tirar uma foto da dupla para o grupo!",
-                "{mandante} deve passar a mão por dentro da roupa de {alvo} e dar um aperto provocante no bumbum dela!"
+                "{mandante} deve passar a mão por dentro da roupa de {alvo} e dar um aperto provocante no bumbum dela por 15 segundos!",
+                "{mandante} de salto deve andar até {alvo}, sentar no colo dela de frente e dar um cheiro profundo no decote!",
+                "{mandante} e {alvo} devem sussurrar simultaneamente um fetiche no ouvido uma da outra e depois dar um selinho demorado!"
             ],
             "H_H": [
-                "{mandante} e {alvo} devem escolher duas mulheres da roda e servir um drink na boca delas sem usar as mãos!"
+                "{mandante} e {alvo} devem escolher duas mulheres da roda e servir um drink na boca delas sem usar as mãos!",
+                "{mandante} e {alvo} devem pagar 1 shot duplo para a dupla mais bonita da sala agora!"
             ],
             "COLETIVA": [
-                "TROCA DE ROUPAS: Todo mundo que estiver de peça preta ou vermelha deve trocar de lugar imediatamente na roda!"
+                "TROCA DE ROUPAS: Todo mundo que estiver de peça preta ou vermelha deve trocar de lugar imediatamente na roda!",
+                "SINAL DE LUZ: Apaguem as luzes principais da sala por 1 minuto. Todo mundo deve dar um abraço/beijo em quem estiver ao lado no escuro!",
+                "CORRENTE DO BEIJO: {mandante} dá um beijo na bochecha/pescoço da pessoa à direita, que passa para a outra até rodar a mesa toda!"
             ]
         }
     },
@@ -144,47 +168,67 @@ ORIGINAL_CARDS = {
             "H_M": [
                 "{mandante}, confesse ao vivo: o quanto você está ereto/excitado olhando para as provocações e a lingerie/corpo de {alvo} nesta noite?",
                 "{mandante}, qual fetiche extremo envolvendo salto, lingerie, amarras ou exibições você realizaria com {alvo} hoje mesmo?",
-                "{mandante}, se {alvo} te desafiasse para ir ao banheiro da festa agora com ela por 3 minutos, você iria sem hesitation?"
+                "{mandante}, se {alvo} te desafiasse para ir ao banheiro da festa agora com ela por 3 minutos, você iria sem pensar duas vezes?",
+                "{mandante}, se a roda te autorizasse a tirar a lingerie de {alvo} agora no quarto, qual seria a primeira coisa que faria na pele dela?",
+                "{mandante}, olhe para o corpo de {alvo} de cima a baixo e diga em tom dominante qual parte você quer morder primeiro."
             ],
             "M_H": [
                 "{mandante}, qual o limite máximo de loucura que você topa fazer com {alvo} assim que essa festa terminar?",
-                "{mandante}, confesse: o quanto a pegada firme e a voz grave de {alvo} ao longo do jogo te deixaram com vontade de ir para o quarto?",
-                "{mandante}, se você pudesse ver {alvo} tirando a roupa toda na sua frente agora, qual parte você olharia primeiro?"
+                "{mandante}, confesse: o quanto a pegada firme e a voz grave de {alvo} ao longo do jogo te deixaram morrendo de vontade de ir para o quarto?",
+                "{mandante}, se você pudesse ver {alvo} tirando a roupa toda na sua frente agora, qual parte do corpo dele você olharia primeiro?",
+                "{mandante}, qual o comando masculino de {alvo} na cama que te faria perder o controle e suspirar bem alto?",
+                "{mandante}, você prefere que {alvo} te pegue no colo com força contra a parede ou que te deite devagar na cama?"
             ],
             "M_M": [
                 "{mandante} e {alvo}, confessem para o grupo: vocês teriam coragem de ir juntas para um quarto no meio desta festa?",
-                "{mandante}, qual fetiche entre duas mulheres você mais tem vontade de experimentar na prática?"
+                "{mandante}, qual fetiche entre duas mulheres em um encontro em grupo você mais tem vontade de experimentar na prática?",
+                "{mandante}, quão excitante é ver os homens da mesa olhando para o charme, salto e corpo de {alvo} ao mesmo tempo que você?"
             ],
             "H_H": [
-                "{mandante}, qual conselho safado você daria para {alvo} se dar bem no final desta noite?"
+                "{mandante}, qual conselho safado e sem filtros você daria para {alvo} conseguir levar a parceira para o quarto no final da noite?",
+                "{mandante}, confesse para o grupo: quem daqui é o amigo mais perigoso quando decide virar o jogo na Fase 3?"
             ],
             "COLETIVA": [
-                "TRIBUNAL CRUCIAL: O grupo vota no casal/dupla de maior química da sala. A dupla deve dar um beijo de cinema ou virar 2 shots!",
-                "REVELAÇÃO FINAL: Cada pessoa da mesa deve confessar quem da roda foi a pessoa que mais te deu tesão durante as brincadeiras!"
+                "TRIBUNAL CRUCIAL: O grupo vota no casal/dupla de maior química da sala. A dupla deve dar um beijo de cinema ou virar 2 shots de tequila!",
+                "REVELAÇÃO FINAL: Cada pessoa da mesa deve confessar quem da roda foi a pessoa que mais te deu tesão e vontade de pegar durante a noite!",
+                "PERGUNTA PROIBIDA DA RODA: O grupo tem o direito de fazer UMA pergunta explícita para {mandante}. Ele(a) responde ou tira 2 peças de roupa!"
             ]
         },
         "desafio": {
             "H_M": [
-                "{mandante} deve levar {alvo} para um canto da sala/quarto por 1 minuto e dar um beijo intenso longe dos olhos do grupo! 💥",
-                "{mandante} deve desatar a lingerie/sutiã de {alvo} ou puxar a alça devagar usando apenas uma das mãos e os dentes!",
+                "{mandante} deve levar {alvo} para um canto da sala ou quarto por 1 minuto e dar um beijo intenso de língua longe dos olhos do grupo! 💥",
+                "{mandante} deve desatar a lingerie/sutiã de {alvo} ou puxar a alça devagar usando apenas uma das mãos e os dentes na frente da roda!",
                 "ORDEM SUPREMA: {mandante} deve ditar UM DESAFIO EXPLÍCITO para {alvo} fazer no seu corpo agora (beijo no pescoço, toque ou sussurro)!",
-                "{mandante} deve deitar na mesa/sofá e deixar {alvo} sentar por cima do seu quadril para um beijo de 15 segundos na boca!"
+                "{mandante} deve deitar no sofá/mesa e deixar {alvo} sentar por cima do seu quadril para um beijo de 15 segundos na boca!",
+                "{mandante} deve puxar {alvo} para um beijo colado, deslizar a mão por baixo da roupa dela até a calcinha/lingerie e sussurrar uma sacanagem no fone dela!",
+                "{mandante} deve prender as mãos de {alvo} para cima com uma das mãos e dar 3 beijos demorados no decote e pescoço dela!",
+                "{mandante} deve colocar {alvo} de costas para ele, puxar o quadril dela firme contra o dele e morder o ombro dela suavemente por 20 segundos!",
+                "{mandante} deve tirar a própria camisa e pedir para {alvo} passar a língua do seu umbigo até o pescoço enquanto o grupo vibra!"
             ],
             "M_H": [
                 "{mandante} deve guiar a mão de {alvo} para sentir a temperatura do seu corpo por dentro da roupa/lingerie por 20 segundos!",
-                "{mandante} de salto alto deve dar um beijo de cinema em {alvo} segurando ele pelo pescoço com força!",
-                "ORDEM SUPREMA: {mandante} ganha o poder de mandar {alvo} fazer O QUE ELA QUISER no corpo dele por 30 segundos seguidos!"
+                "{mandante} de salto alto deve dar um beijo de cinema em {alvo} segurando ele pelo pescoço com força e pernas entrelaçadas!",
+                "ORDEM SUPREMA: {mandante} ganha o poder de mandar {alvo} fazer O QUE ELA QUISER no corpo dele por 30 segundos seguidos!",
+                "{mandante} deve sentar no colo de {alvo}, colocar as mãos por dentro da camisa dele e dar mordidas provocantes nos lábios dele!",
+                "{mandante} deve tirar o sutiã ou blusa por baixo da roupa e jogar no rosto de {alvo} olhando fixamente na lente dos olhos dele!",
+                "{mandante} deve fazer uma dança privativa de 30 segundos no colo de {alvo} com as mãos dele segurando a cintura dela!",
+                "{mandante} deve sussurrar no microfone/ouvido de {alvo} a coisa mais suja e proibida que quer que ele faça com ela no quarto hoje!"
             ],
             "M_M": [
-                "{mandante} e {alvo} devem dar um beijo triplo com um dos homens do grupo ou um beijo duplo inesquecível entre as duas!",
-                "{mandante} deve tirar a alça da roupa de {alvo} e dar um beijo provocante no ombro e no decote dela!"
+                "{mandante} e {alvo} devem dar um beijo triplo com um dos homens do grupo ou um beijo duplo inesquecível de 15 segundos entre as duas!",
+                "{mandante} deve tirar a alça da roupa de {alvo} e dar um beijo provocante no ombro, no decote e na boca dela!",
+                "{mandante} e {alvo} devem dançar bem coladas, com as mãos nas bundas uma da outra por 30 segundos na frente do grupo!",
+                "{mandante} deve sussurrar um desejo de fetiche no ouvido de {alvo} e dar uma moididinha na orelha dela até ela arfar!"
             ],
             "H_H": [
-                "{mandante} e {alvo} devem virar um shot duplo de tequila/bebida forte sem fazer careta para fechar a Fase 3!"
+                "{mandante} e {alvo} devem virar um shot duplo de tequila/bebida forte sem fazer careta para fechar a Fase 3 com chave de ouro!",
+                "{mandante} e {alvo} ganham o direito de mandar o grupo inteiro tomar 1 shot de bebida juntos agora!"
             ],
             "COLETIVA": [
                 "CLÍMAX DO GRUPO: Todo mundo vira a sua bebida, dá um grito de comemoração e abraça/beija quem estiver ao lado!",
-                "ORGASMO DA RESENHA: Cada participante deve mandar um áudio no grupo da festa dando um gemido curto ou frase provocante!"
+                "ORGASMO DA RESENHA: Cada participante deve gravar ou falar na roda o seu melhor gemido/suspiro em tom audível para a mesa!",
+                "FOTO EXPLÍCITA DO GRUPO: Tirar uma foto de todos os participantes no espelho, com poses sensuais/provocantes para marcar a noite!",
+                "ÚLTIMA RODADA DE SHOTS: Virar os copos de uma vez e decidir na roda quem vai para o quarto com quem no final do jogo!"
             ]
         }
     }
@@ -196,7 +240,8 @@ ORIGINAL_NEVER_CARDS = [
     "Eu nunca me envolvi com mais de uma pessoa da mesma roda de amigos em momentos diferentes.",
     "Eu nunca fingi que estava bêbado(a) só para ter coragem de dar em cima de alguém.",
     "Eu nunca fiz um jogo que terminou em amassos no quarto.",
-    "Eu nunca usei lingeries secretas ou saltos exclusivamente para um jogo de provocação."
+    "Eu nunca usei lingeries secretas ou saltos exclusivamente para um jogo de provocação.",
+    "Eu nunca fui para o banheiro de um bar/festa para um momento íntimo rápido com alguém da mesa."
 ]
 
 ORIGINAL_PUNISHMENTS = [
@@ -205,7 +250,8 @@ ORIGINAL_PUNISHMENTS = [
     "Mandar um áudio de 10 segundos no grupo do WhatsApp dando 3 gemidos provocantes.",
     "Tirar mais uma peça de roupa/acessório na frente de todo mundo!",
     "Pagar 10 flexões ou agachamentos enquanto a roda conta e debocha!",
-    "Deixar o par ou o grupo fazer uma pergunta proibida e responder sem mentir!"
+    "Deixar o par ou o grupo fazer uma pergunta proibida e responder sem mentir!",
+    "Servir um shot no próprio pescoço ou peito para o parceiro/alvo virar com a boca!"
 ]
 
 ACTIVE_ROOMS = {}
@@ -299,7 +345,7 @@ def handle_ready(data):
         game_state["players"][request.sid]["ready"] = True
         p_ids = list(game_state["players"].keys())
         
-        # PERMITE JOGAR A PARTIR DE 2 PESSOAS OU MAIS
+        # SUPORE A PARTIR DE 2 JOGADORES (CASAL) OU GRUPOS MAIORES
         if len(p_ids) >= 2 and all(game_state["players"][uid]["ready"] for uid in p_ids):
             game_state["game_started"] = True
             game_state["game_over"] = False
@@ -322,7 +368,6 @@ def handle_draw(data):
     mandante = game_state["players"][game_state["current_player"]]
     alvo = game_state["players"].get(game_state["target_player"]) if game_state["target_player"] else None
 
-    # Descobre a chave da combinação de gênero do turno (Ex: H_M, M_H, M_M, H_H)
     if alvo:
         comb_key = f"{mandante['gender']}_{alvo['gender']}"
     else:
@@ -405,7 +450,7 @@ def sortear_proximo_turno(room_id):
     mandante_id = random.choice(p_ids)
     mandante = players[mandante_id]
     
-    # 2. Filtra Alvos Válidos de acordo com as preferências de gênero
+    # 2. Filtra Alvos Válidos segundo as preferências de gênero
     candidatos = []
     for pid in p_ids:
         if pid == mandante_id: continue
