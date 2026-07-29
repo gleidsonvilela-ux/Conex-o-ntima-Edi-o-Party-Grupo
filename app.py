@@ -21,7 +21,7 @@ socketio = SocketIO(
     ping_interval=25
 )
 
-# 👥 BARALHO ULTRA EXPANDIDO - FASES 2 E 3 RECHEADAS DE DESAFIOS E FETICHES
+# 👥 BARALHO MASSIVO, EXPLÍCITO E COM FETICHES - PARTY & GRUPO
 ORIGINAL_CARDS = {
     "fase1": {
         "verdade": {
@@ -104,7 +104,7 @@ ORIGINAL_CARDS = {
                 "{mandante}, se {alvo} te tirasse para dançar no escuro e te pegasse pela cintura agora, você deixaria ele te beijar?",
                 "{mandante}, qual parte do corpo de {alvo} te deixa mais desconcentrada durante o jogo?",
                 "{mandante}, qual atitude masculina durante a provocação te faz ficar molhada instantaneamente?",
-                "{mandante}, se {alvo} sussurrasse no seu ouvido uma ordem direta na frente de todo mundo, você obedecerias?",
+                "{mandante}, se {alvo} sussurrasse no seu ouvido uma ordem direta na frente de todo mundo, você obedeceria?",
                 "{mandante}, confesse para a roda: o que você sente quando um homem segura o seu pescoço com firmeza e carinho?",
                 "{mandante}, se você pudesse mandar {alvo} tirar a camisa e ficar só de calça até o fim da festa, você mandaria?",
                 "{mandante}, qual é a provocação que {alvo} poderia fazer no seu corpo agora que te faria arrepiar inteira?"
@@ -270,11 +270,10 @@ def get_initial_room_state():
             "target_player": None,
             "current_cards": {},
             "game_started": False,
-            "location_mode": "presencial",
             "game_type": "cards", 
             "scores": {},
             "game_over": False,
-            "rounds_played": {"fase1": 0, "fase2": 0, "fase3": 0},
+            "player_rounds": {}, # guarda {"fase1": count, "fase2": count, "fase3": count} por sid
             "creator_name": ""
         },
         "session_cards": copy.deepcopy(ORIGINAL_CARDS),
@@ -309,7 +308,6 @@ def handle_join(data):
     player_name = data.get('name', 'Convidado').strip()
     gender = data.get('gender', 'H')
     pref = data.get('pref', 'hetero') # 'hetero' ou 'ambos'
-    location_mode = data.get('location_mode', 'presencial')
     
     if room_id not in ACTIVE_ROOMS:
         emit('error', {'msg': 'Código de sala inválido!'})
@@ -321,7 +319,6 @@ def handle_join(data):
     
     if len(game_state["players"]) == 0:
         game_state["creator_name"] = player_name
-        game_state["location_mode"] = location_mode
 
     game_state["players"][request.sid] = {
         "name": player_name, 
@@ -329,8 +326,12 @@ def handle_join(data):
         "pref": pref,
         "ready": False
     }
+    
     if request.sid not in game_state["scores"]:
         game_state["scores"][request.sid] = 0
+        
+    if request.sid not in game_state["player_rounds"]:
+        game_state["player_rounds"][request.sid] = {"fase1": 0, "fase2": 0, "fase3": 0}
 
     update_all_clients(room_id)
 
@@ -345,7 +346,6 @@ def handle_ready(data):
         game_state["players"][request.sid]["ready"] = True
         p_ids = list(game_state["players"].keys())
         
-        # SUPORE A PARTIR DE 2 JOGADORES (CASAL) OU GRUPOS MAIORES
         if len(p_ids) >= 2 and all(game_state["players"][uid]["ready"] for uid in p_ids):
             game_state["game_started"] = True
             game_state["game_over"] = False
@@ -433,7 +433,8 @@ def handle_next_turn(data):
     if executed and request.sid in game_state["scores"]:
         game_state["scores"][request.sid] += game_state["current_cards"].get('points', 0)
         fase_atual = game_state["current_cards"].get('real_fase', 'fase1')
-        game_state["rounds_played"][fase_atual] += 1
+        if request.sid in game_state["player_rounds"]:
+            game_state["player_rounds"][request.sid][fase_atual] += 1
         
     game_state["current_cards"] = {}
     sortear_proximo_turno(room_id)
@@ -446,11 +447,9 @@ def sortear_proximo_turno(room_id):
     
     if len(p_ids) < 2: return
     
-    # 1. Sorteia o Mandante
     mandante_id = random.choice(p_ids)
     mandante = players[mandante_id]
     
-    # 2. Filtra Alvos Válidos segundo as preferências de gênero
     candidatos = []
     for pid in p_ids:
         if pid == mandante_id: continue
@@ -529,7 +528,14 @@ def update_all_clients(room_id):
         r_label = "Pronto ✓" if p["ready"] else "Aguardando..."
         players_status.append(f"{p['name']} ({p['gender']} - {p_pref}): {r_label}")
 
+    # LÓGICA DE LIBERAÇÃO DE FASES POR JOGADOR (TODOS DEVEM CUMPRIR PELO MENOS 1 RODADA)
+    all_done_f1 = len(p_ids) > 0 and all(game_state["player_rounds"].get(uid, {}).get("fase1", 0) >= 1 for uid in p_ids)
+    all_done_f2 = len(p_ids) > 0 and all(game_state["player_rounds"].get(uid, {}).get("fase2", 0) >= 1 for uid in p_ids)
+
     for uid in p_ids:
+        my_f1 = game_state["player_rounds"].get(uid, {}).get("fase1", 0)
+        my_f2 = game_state["player_rounds"].get(uid, {}).get("fase2", 0)
+        
         socketio.emit('game_update', {
             'is_my_turn': (uid == game_state["current_player"]),
             'room_id': room_id,
@@ -539,10 +545,12 @@ def update_all_clients(room_id):
             'game_started': game_state["game_started"],
             'game_over': game_state["game_over"],
             'score_board': score_text,
-            'rounds_played': game_state["rounds_played"],
             'players_status': players_status,
             'am_i_ready': game_state["players"][uid]["ready"],
-            'location_mode': game_state["location_mode"]
+            'fase2_unlocked': all_done_f1,
+            'fase3_unlocked': (all_done_f1 and all_done_f2),
+            'my_f1_count': my_f1,
+            'my_f2_count': my_f2
         }, room=uid)
 
 if __name__ == '__main__':
