@@ -354,11 +354,14 @@ def handle_ready(data):
         game_state["players"][request.sid]["ready"] = True
         p_ids = list(game_state["players"].keys())
         
+        # Se 2 ou mais pessoas estiverem prontas, o jogo inicia!
         if len(p_ids) >= 2 and all(game_state["players"][uid]["ready"] for uid in p_ids):
             game_state["game_started"] = True
             game_state["game_over"] = False
             room["session_cards"] = copy.deepcopy(ORIGINAL_CARDS)
             sortear_proximo_turno(room_id)
+        else:
+            update_all_clients(room_id)
 
 @socketio.on('draw_card')
 def handle_draw(data):
