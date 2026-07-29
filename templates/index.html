@@ -86,13 +86,13 @@
         <div id="login-screen" style="display: none;">
             <label style="font-size:11px; color:#aaa; display:block; text-align:left; margin-bottom:2px;">Seu Gênero:</label>
             <div class="gender-selector">
-                <button type="button" class="selector-btn" id="btn-H" onclick="setGender('H')">Homem 🧠</button>
+                <button type="button" class="selector-btn active" id="btn-H" onclick="setGender('H')">Homem 🧠</button>
                 <button type="button" class="selector-btn" id="btn-M" onclick="setGender('M')">Mulher 👑</button>
             </div>
 
             <label style="font-size:11px; color:#aaa; display:block; text-align:left; margin-top:10px; margin-bottom:2px;">Sua Preferência de Interação no Jogo:</label>
             <div class="pref-selector">
-                <button type="button" class="selector-btn" id="btn-hetero" onclick="setPref('hetero')">🔴 Apenas Gênero Oposto (Hétero)</button>
+                <button type="button" class="selector-btn active" id="btn-hetero" onclick="setPref('hetero')">🔴 Apenas Gênero Oposto (Hétero)</button>
                 <button type="button" class="selector-btn" id="btn-ambos" onclick="setPref('ambos')">🟢 Livre / Ambos os Gêneros</button>
             </div>
 
@@ -242,7 +242,7 @@
                 osc.type = 'sine'; osc.frequency.setValueAtTime(880, now);
                 gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.1);
+                osc.start(now + (idx * 0.08)); osc.stop(now + 0.1);
             }
         }
 
@@ -298,10 +298,28 @@
 
         function joinGame() {
             document.getElementById('instruction-screen').style.display = 'none';
-            socket.emit('join_game', { room_id: activeRoomId, name: myName, gender: selectedGender, pref: selectedPref });
+            document.getElementById('lobby-screen').style.display = 'block';
+            
+            socket.emit('join_game', { 
+                room_id: activeRoomId, 
+                name: myName, 
+                gender: selectedGender, 
+                pref: selectedPref 
+            });
         }
 
-        function setReady() { socket.emit('player_ready', { room_id: activeRoomId }); }
+        function setReady() { 
+            if(!activeRoomId) return alert("Erro ao identificar a sala!");
+            
+            const btn = document.getElementById('ready-btn');
+            if(btn) {
+                btn.innerText = "Aguardando outros participantes... ⏳";
+                btn.disabled = true;
+                btn.style.background = "#555";
+            }
+            
+            socket.emit('player_ready', { room_id: activeRoomId }); 
+        }
         
         function draw(fase, tipo) { playSFX('carta'); socket.emit('draw_card', { room_id: activeRoomId, fase: fase, type: tipo }); }
         function triggerPunishment() { socket.emit('trigger_punishment', { room_id: activeRoomId }); }
@@ -336,7 +354,6 @@
                     return; 
                 }
                 timeLeft--;
-                // TOCA O SOM NOS ÚLTIMOS 10 SEGUNDOS
                 if(timeLeft <= 10 && timeLeft > 0) playSFX('timerBeep');
                 let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
                 document.getElementById('timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
@@ -390,7 +407,6 @@
                         layout.innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><button class="btn-success" onclick="finishTurn(true)">Cumprido na Roda ✓</button><button class="btn-danger" onclick="triggerPunishment()">Pular Rodada (Castigo 🛑)</button></div>`;
                     }
 
-                    // EXIBE CRONÔMETRO SE A CARTA TIVER TEMPO DEFINIDO
                     if (state.card.duration > 0 && state.card.fase_key !== 'game_over') {
                         currentCardDuration = state.card.duration;
                         document.getElementById('timer-container').style.display = 'block';
